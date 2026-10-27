@@ -1,0 +1,25 @@
+2026-10-27 14:43:22.273 INFO  FILE            - import data from transactions1.csv
+2026-10-27 14:43:22.298 INFO  FILE            - import data from transactions2.csv
+2026-10-27 14:43:22.301 INFO  FILE            - import data from transactions3.csv
+2026-10-27 14:43:22.303 ERROR FILE            - cannot parse date from string - please check whether syntax is correct: Animates,4,13/5/2018
+java.text.ParseException: Unparseable date: "13/5/2018"
+	at java.base/java.text.DateFormat.parse(DateFormat.java:399)
+	at nz.ac.vuw.swen301.tuts.log4j.MergeTransactions.readData(MergeTransactions.java:98)
+	at nz.ac.vuw.swen301.tuts.log4j.MergeTransactions.main(MergeTransactions.java:56)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doMain(ExecJavaMojo.java:375)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:364)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:286)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2026-10-27 14:43:22.305 INFO  FILE            - import data from transactions4.csv
+2026-10-27 14:43:22.307 WARN  FILE            - file transactions4.csv does not exist - skip
+java.io.FileNotFoundException: transactions4.csv (系统找不到指定的文件。)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:216)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:157)
+	at java.base/java.io.FileReader.<init>(FileReader.java:75)
+	at nz.ac.vuw.swen301.tuts.log4j.MergeTransactions.readData(MergeTransactions.java:92)
+	at nz.ac.vuw.swen301.tuts.log4j.MergeTransactions.main(MergeTransactions.java:57)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doMain(ExecJavaMojo.java:375)
+	at org.codehaus.mojo.exec.ExecJavaMojo.doExec(ExecJavaMojo.java:364)
+	at org.codehaus.mojo.exec.ExecJavaMojo.lambda$execute$0(ExecJavaMojo.java:286)
+	at java.base/java.lang.Thread.run(Thread.java:833)

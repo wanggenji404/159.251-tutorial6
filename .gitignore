@@ -1,0 +1,15 @@
+# Maven build output
+target/
+
+# Compiled class files (in case someone builds outside Maven)
+*.class
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+
+# Note: logs.txt and logs.csv are intentionally NOT ignored - they are the
+# example outputs referenced in README.md and are recreated on every run.

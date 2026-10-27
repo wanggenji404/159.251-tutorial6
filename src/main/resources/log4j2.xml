@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Log4j 2 configuration for Tutorial 6.
+
+  Two named loggers are declared, matching the two concerns in the code:
+
+    FILE          everything about accessing the transaction files.
+                  Goes to the console AND to logs.txt.
+
+    TRANSACTIONS  the transaction data itself: each imported purchase and
+                  the summary. Goes to the console ONLY - it must not end up
+                  in the file-access log.
+
+  Both use PatternLayout. The pattern for the file adds the full date so the
+  log remains readable when several runs are appended to it.
+
+  The level of each logger can be overridden from the command line without
+  editing this file, e.g.
+
+      mvn exec:java -Dexec.mainClass=... -DlogLevel=info
+      mvn exec:java -Dexec.mainClass=... -DlogLevel=warn
+
+  (the property falls back to "debug" when it is not set).
+-->
+<Configuration status="WARN">
+
+  <Properties>
+    <Property name="CONSOLE_PATTERN">%d{HH:mm:ss.SSS} %-5level %-15.15c{1} - %msg%n</Property>
+    <Property name="FILE_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-15.15c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+
+    <!-- Console: shared by both loggers -->
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${CONSOLE_PATTERN}" charset="UTF-8"/>
+    </Console>
+
+    <!-- logs.txt: written by the FILE logger only.
+         charset is pinned to UTF-8 so the file is identical on every platform
+         (the JVM default on a Chinese Windows is GBK). -->
+    <File name="FileAppender" fileName="logs.txt" append="false">
+      <PatternLayout pattern="${FILE_PATTERN}" charset="UTF-8"/>
+    </File>
+
+  </Appenders>
+
+  <Loggers>
+
+    <!-- File access: console + logs.txt -->
+    <Logger name="FILE" level="${sys:logLevel:-debug}" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="FileAppender"/>
+    </Logger>
+
+    <!-- Transaction data: console only -->
+    <Logger name="TRANSACTIONS" level="${sys:logLevel:-debug}" additivity="false">
+      <AppenderRef ref="Console"/>
+    </Logger>
+
+    <!-- Anything logged elsewhere is not expected; keep the console quiet. -->
+    <Root level="error">
+      <AppenderRef ref="Console"/>
+    </Root>
+
+  </Loggers>
+
+</Configuration>

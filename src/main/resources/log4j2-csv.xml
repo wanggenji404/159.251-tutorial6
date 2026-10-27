@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  OPTIONAL CHALLENGE - a CSV variant of the configuration.
+
+  Same two loggers, but instead of the human-readable logs.txt everything is
+  written to logs.csv with a comma-separated PatternLayout, so the file can be
+  opened directly in Excel / LibreOffice / Google Sheets.
+
+  Column order (there is no header line, because the Log4j 2 File appender has
+  no header attribute - note it here so the columns are unambiguous):
+
+      1. timestamp   yyyy-MM-dd HH:mm:ss.SSS
+      2. level       INFO / DEBUG / WARN / ERROR
+      3. logger      FILE or TRANSACTIONS
+      4. message     the log message (stack traces follow on extra lines)
+
+  Activate it with:
+
+      mvn compile exec:java -Dexec.mainClass=nz.ac.vuw.swen301.tuts.log4j.MergeTransactions \
+          -Dlog4j2.configurationFile=src/main/resources/log4j2-csv.xml
+
+  The default configuration (log4j2.xml) is used when the property is not set.
+-->
+<Configuration status="WARN">
+
+  <Properties>
+    <Property name="CONSOLE_PATTERN">%d{HH:mm:ss.SSS} %-5level %-15.15c{1} - %msg%n</Property>
+  </Properties>
+
+  <Appenders>
+
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${CONSOLE_PATTERN}" charset="UTF-8"/>
+    </Console>
+
+    <!--
+      Comma-separated, exactly one line per event, one row per event in Excel.
+
+      The message is wrapped in double quotes so that commas inside a message
+      (for example "Purchase [retailer=Pack and Save, amount=188.0, ...]")
+      stay inside a single cell instead of splitting the row.
+
+      Stack traces are deliberately left out of the CSV: they contain quotes and
+      newlines, which would corrupt the rows. PatternLayout appends them by
+      default, so alwaysWriteExceptions is switched off here. They are still
+      written in full to the console and to logs.txt by the default
+      configuration, so no detail is lost - the CSV is simply the tabular view
+      of the events.
+    -->
+    <File name="CsvFile" fileName="logs.csv" append="false">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS},%level,%logger,&quot;%msg&quot;%n"
+                     charset="UTF-8"
+                     alwaysWriteExceptions="false"/>
+    </File>
+  </Appenders>
+
+  <Loggers>
+
+    <Logger name="FILE" level="${sys:logLevel:-debug}" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="CsvFile"/>
+    </Logger>
+
+    <Logger name="TRANSACTIONS" level="${sys:logLevel:-debug}" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="CsvFile"/>
+    </Logger>
+
+    <Root level="error">
+      <AppenderRef ref="Console"/>
+    </Root>
+
+  </Loggers>
+
+</Configuration>
